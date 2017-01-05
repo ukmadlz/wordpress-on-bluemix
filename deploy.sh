@@ -101,16 +101,36 @@ if ( !defined('ABSPATH') )
 require_once(ABSPATH . 'wp-settings.php');
 " > wordpress/wp-config.php;
 
-# Setup Composer.json
+# Setup Composer
 echo "{
     \"require\": {
         \"php\": \"5.5.*\"
     }
 }" > wordpress/composer.json
+echo "{
+    \"_readme\": [
+        \"This file locks the dependencies of your project to a known state\",
+        \"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file\",
+        \"This file is @generated automatically\"
+    ],
+    \"content-hash\": \"d779e9c1c97874f3c1ac443bb53cefa9\",
+    \"packages\": [],
+    \"packages-dev\": [],
+    \"aliases\": [],
+    \"minimum-stability\": \"stable\",
+    \"stability-flags\": [],
+    \"prefer-stable\": false,
+    \"prefer-lowest\": false,
+    \"platform\": {
+        \"php\": \"5.5.*\"
+    },
+    \"platform-dev\": []
+}" > wordpress/composer.lock
+echo "vendor" > wordpress/.cfignore
 
 # Push app to Bluemix
 cd wordpress
-cf push $WORDPRESSNAME
+cf push $WORDPRESSNAME -b https://github.com/heroku/heroku-buildpack-php.git
 cd ../
 
 # Bind DB to the app
