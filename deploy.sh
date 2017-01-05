@@ -60,10 +60,6 @@ cp -R secure-db-connection ./wordpress/wp-content/plugins/
 # Move the DB file into wp-content
 cp secure-db-connection/lib/db.php ./wordpress/wp-content/db.php
 
-# Clean-up zips
-rm wordpress.zip
-rm secure-db-connection.zip
-
 # Setup the working directory
 mkdir wordpress/.bp-config;
 echo "{
@@ -133,6 +129,15 @@ cf set-env $WORDPRESSNAME NONCE_SALT $NONCESALT;
 # Restart for good measure
 cf restage $WORDPRESSNAME;
 
-# # Clean-up directories
-rm -Rf wordpress
-rm -Rf secure-db-connection
+# Clean-up
+read -p "Clean up zip/directories? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  # Clean-up directories
+  rm -Rf wordpress
+  rm -Rf secure-db-connection
+  # Clean-up zips
+  rm wordpress.zip
+  rm secure-db-connection.zip
+fi
