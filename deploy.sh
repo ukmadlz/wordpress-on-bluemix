@@ -104,7 +104,7 @@ require_once(ABSPATH . 'wp-settings.php');
 # Setup Composer
 echo "{
     \"require\": {
-        \"php\": \"5.5.*\"
+        \"php\": \">=5.3.3\"
     }
 }" > wordpress/composer.json
 echo "{
@@ -113,7 +113,7 @@ echo "{
         \"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file\",
         \"This file is @generated automatically\"
     ],
-    \"content-hash\": \"d779e9c1c97874f3c1ac443bb53cefa9\",
+    \"content-hash\": \"056740a7115b550449ee451a080c7494\",
     \"packages\": [],
     \"packages-dev\": [],
     \"aliases\": [],
