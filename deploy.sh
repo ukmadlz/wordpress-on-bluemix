@@ -63,7 +63,8 @@ cp secure-db-connection/lib/db.php ./wordpress/wp-content/db.php
 # Setup the working directory
 mkdir wordpress/.bp-config;
 echo "{
-    \"WEBDIR\": \"/\"
+    \"WEBDIR\": \"/\",
+    \"PHP_EXTENSIONS\": [\"mysqli\", \"curl\"]
 }" > wordpress/.bp-config/options.json;
 
 # Write the wp-config.php
