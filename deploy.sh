@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # Copyright 2016 IBM Corp. All Rights Reserved.
 #
@@ -30,7 +30,7 @@ command -v cf >/dev/null 2>&1 || { echo >&2 "I require cf but it's not installed
 
 # Download the source
 command -v curl >/dev/null 2>&1 || { echo >&2 "I require curl but it's not installed.  Aborting."; exit 1; }
-curl -X GET ${WORDPRESS} > wordpress.zip;
+curl -s -X GET ${WORDPRESS} > wordpress.zip;
 
 # Create DB Instance
 cf create-service compose-for-mysql Standard $MYSQLSERVICE;
