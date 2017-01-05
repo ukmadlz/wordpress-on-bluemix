@@ -22,6 +22,7 @@ read -p "App Name: " WORDPRESSNAME;
 
 # Presets
 WORDPRESS="https://wordpress.org/latest.zip";
+SSLPLUGIN="https://downloads.wordpress.org/plugin/secure-db-connection.1.1.2.zip";
 MYSQLSERVICE="WordpressDatabase";
 
 # Make sure CF is installed
@@ -44,21 +45,39 @@ SECUREAUTHSALT="6";
 LOGGEDINSALT="7";
 NONCESALT="8";
 
-# Unzip the
+# Unzip wordpress
 unzip wordpress.zip;
+
+# Download the secure db connection plugin
+curl -X GET ${SSLPLUGIN} > secure-db-connection.zip;
+
+# Unzip the secure db connection plugin
+unzip secure-db-connection.zip;
+
+# Move the plugin into place
+cp -R secure-db-connection ./wordpress/wp-content/plugins/
+
+# Move the DB file into wp-content
+cp secure-db-connection/lib/db.php ./wordpress/wp-content/db.php
+
+# Clean-up zips
+rm wordpress.zip
+rm secure-db-connection.zip
 
 # Setup the working directory
 mkdir wordpress/.bp-config;
 echo "{
-    \"WEBDIR\": \"wordpress\"
+    \"WEBDIR\": \"/\"
 }" > wordpress/.bp-config/options.json;
 
 # Write the wp-config.php
 echo "<?php
-if(isset(\$_ENV['VCAP_SERVICES'])) {
-    \$vcap_services = json_decode(\$_ENV['VCAP_SERVICES'], true);
+if(getenv('VCAP_SERVICES')) {
+    \$vcap_services = json_decode(getenv('VCAP_SERVICES'), true);
     \$composeformysql = \$vcap_services['compose-for-mysql'][0]['credentials'];
     \$mysqlconfig = parse_url(\$composeformysql['uri']);
+    \$cacert = base64_decode(\$composeformysql['ca_certificate_base64']);
+    file_put_contents(dirname(__FILE__) . '/dbcert.pem', \$cacert);
 } else {
     echo 'No Config'; die();
 }
@@ -77,8 +96,8 @@ define('SECURE_AUTH_SALT', \$_ENV['SECURE_AUTH_SALT']);
 define('LOGGED_IN_SALT',   \$_ENV['LOGGED_IN_SALT']);
 define('NONCE_SALT',       \$_ENV['NONCE_SALT']);
 // Hack till MySQL over SSL is implemented
-define('MYSQL_CLIENT_FLAGS', MYSQL_CLIENT_SSL);//This activates SSL mode
-define('MYSQL_SSL_CA', base64_decode(\$composeformysql['ca_certificate_base64']));
+define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
+define('MYSQL_SSL_CA', dirname(__FILE__) . '/dbcert.pem');
 \$table_prefix  = 'wp_';
 define('WP_DEBUG', false);
 if ( !defined('ABSPATH') )
@@ -86,11 +105,17 @@ if ( !defined('ABSPATH') )
 require_once(ABSPATH . 'wp-settings.php');
 " > wordpress/wp-config.php;
 
-# Add the SSL to wp-dp.php
-sed -iold '1536i\'$'\n''if ( \$client_flags & MYSQL_CLIENT_SSL ) {\$pack = array( \$this->dbh );\$call_set = false;foreach( array( 'MYSQL_SSL_KEY', 'MYSQL_SSL_CERT', 'MYSQL_SSL_CA','MYSQL_SSL_CAPATH', 'MYSQL_SSL_CIPHER' ) as \$opt_key ) {\$pack[] = ( defined( \$opt_key ) ) ? constant( \$opt_key ) : null;\$call_set |= defined( \$opt_key );}if ( \$call_set ) {call_user_func_array( 'mysqli_ssl_set', \$pack );}}'$'\n' wordpress/wp-includes/wp-db.php
+# Setup Composer.json
+echo "{
+    \"require\": {
+        \"php\": \"5.5.*\"
+    }
+}" > wordpress/composer.json
 
 # Push app to Bluemix
+cd wordpress
 cf push $WORDPRESSNAME
+cd ../
 
 # Bind DB to the app
 cf bind-service $WORDPRESSNAME $MYSQLSERVICE;
@@ -108,6 +133,6 @@ cf set-env $WORDPRESSNAME NONCE_SALT $NONCESALT;
 # Restart for good measure
 cf restage $WORDPRESSNAME;
 
-# Clean-up
+# # Clean-up directories
 rm -Rf wordpress
-rm wordpress.zip
+rm -Rf secure-db-connection
