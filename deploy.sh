@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright 2016 IBM Corp. All Rights Reserved.
+# Copyright 2017 IBM Corp. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the “License”);
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ NONCESALT="8";
 unzip wordpress.zip;
 
 # Download the secure db connection plugin
-curl -X GET ${SSLPLUGIN} > secure-db-connection.zip;
+curl -s -X GET ${SSLPLUGIN} > secure-db-connection.zip;
 
 # Unzip the secure db connection plugin
 unzip secure-db-connection.zip;
@@ -64,8 +64,7 @@ cp secure-db-connection/lib/db.php ./wordpress/wp-content/db.php
 mkdir wordpress/.bp-config;
 echo "{
     \"WEBDIR\": \"/\",
-    \"PHP_EXTENSIONS\": [\"mysqli\", \"curl\"]
-    \"PHP_VERSION\": \"{PHP_70_LATEST}\"
+    \"PHP_EXTENSIONS\": [\"mysqli\", \"curl\", \"zlib\", \"openssl\", \"mcrypt\", \"mbstring\"]
 }" > wordpress/.bp-config/options.json;
 
 # Write the wp-config.php
@@ -106,7 +105,7 @@ require_once(ABSPATH . 'wp-settings.php');
 # Setup Composer
 echo "{
     \"require\": {
-        \"php\": \"7.*\"
+        \"php\": \"5.5.*\"
     }
 }" > wordpress/composer.json
 echo "{
@@ -115,7 +114,7 @@ echo "{
         \"Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file\",
         \"This file is @generated automatically\"
     ],
-    \"content-hash\": \"056740a7115b550449ee451a080c7494\",
+    \"content-hash\": \"d779e9c1c97874f3c1ac443bb53cefa9\",
     \"packages\": [],
     \"packages-dev\": [],
     \"aliases\": [],
@@ -124,7 +123,7 @@ echo "{
     \"prefer-stable\": false,
     \"prefer-lowest\": false,
     \"platform\": {
-        \"php\": \"7.*\"
+        \"php\": \"5.5.*\"
     },
     \"platform-dev\": []
 }" > wordpress/composer.lock
