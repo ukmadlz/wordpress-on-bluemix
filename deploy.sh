@@ -65,6 +65,7 @@ mkdir wordpress/.bp-config;
 echo "{
     \"WEBDIR\": \"/\",
     \"PHP_EXTENSIONS\": [\"mysqli\", \"curl\"]
+    \"PHP_VERSION\": \"{PHP_70_LATEST}\"
 }" > wordpress/.bp-config/options.json;
 
 # Write the wp-config.php
@@ -105,7 +106,7 @@ require_once(ABSPATH . 'wp-settings.php');
 # Setup Composer
 echo "{
     \"require\": {
-        \"php\": \">=5.3.3\"
+        \"php\": \"7.*\"
     }
 }" > wordpress/composer.json
 echo "{
@@ -123,7 +124,7 @@ echo "{
     \"prefer-stable\": false,
     \"prefer-lowest\": false,
     \"platform\": {
-        \"php\": \"5.5.*\"
+        \"php\": \"7.*\"
     },
     \"platform-dev\": []
 }" > wordpress/composer.lock
@@ -131,7 +132,7 @@ echo "vendor" > wordpress/.cfignore
 
 # Push app to Bluemix
 cd wordpress
-cf push $WORDPRESSNAME -b https://github.com/heroku/heroku-buildpack-php.git
+cf push $WORDPRESSNAME -b default
 cd ../
 
 # Bind DB to the app
