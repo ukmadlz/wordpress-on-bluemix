@@ -64,6 +64,7 @@ cp secure-db-connection/lib/db.php ./wordpress/wp-content/db.php
 mkdir wordpress/.bp-config;
 echo "{
     \"WEBDIR\": \"/\",
+    \"PHP_EXTENSIONS\": [\"mysqli\", \"curl\"]
     \"PHP_VERSION\": \"{PHP_70_LATEST}\"
 }" > wordpress/.bp-config/options.json;
 
