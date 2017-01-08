@@ -23,7 +23,7 @@ read -p "App Name: " WORDPRESSNAME;
 # Presets
 WORDPRESS="https://wordpress.org/latest.zip";
 SSLPLUGIN="https://downloads.wordpress.org/plugin/secure-db-connection.1.1.2.zip";
-MYSQLSERVICE="WordpressDatabase";
+MYSQLSERVICE=$WORDPRESSNAME"-wordpress-database";
 
 # Make sure CF is installed
 command -v cf >/dev/null 2>&1 || { echo >&2 "I require cf but it's not installed.  Aborting."; exit 1; }
@@ -84,17 +84,19 @@ define('DB_PASSWORD', \$mysqlconfig['pass']);
 define('DB_HOST', \$mysqlconfig['host'].':'.\$mysqlconfig['port'].\$mysqlconfig['path']);
 define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
-define('AUTH_KEY',         \$_ENV['AUTH_KEY']);
-define('SECURE_AUTH_KEY',  \$_ENV['SECURE_AUTH_KEY']);
-define('LOGGED_IN_KEY',    \$_ENV['LOGGED_IN_KEY']);
-define('NONCE_KEY',        \$_ENV['NONCE_KEY']);
-define('AUTH_SALT',        \$_ENV['AUTH_SALT']);
-define('SECURE_AUTH_SALT', \$_ENV['SECURE_AUTH_SALT']);
-define('LOGGED_IN_SALT',   \$_ENV['LOGGED_IN_SALT']);
-define('NONCE_SALT',       \$_ENV['NONCE_SALT']);
+define('AUTH_KEY',         getenv('AUTH_KEY'));
+define('SECURE_AUTH_KEY',  getenv('SECURE_AUTH_KEY'));
+define('LOGGED_IN_KEY',    getenv('LOGGED_IN_KEY'));
+define('NONCE_KEY',        getenv('NONCE_KEY'));
+define('AUTH_SALT',        getenv('AUTH_SALT'));
+define('SECURE_AUTH_SALT', getenv('SECURE_AUTH_SALT'));
+define('LOGGED_IN_SALT',   getenv('LOGGED_IN_SALT'));
+define('NONCE_SALT',       getenv('NONCE_SALT'));
 // Hack till MySQL over SSL is implemented
 define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
 define('MYSQL_SSL_CA', dirname(__FILE__) . '/dbcert.pem');
+// Disable FS Modification
+define('DISALLOW_FILE_MODS', true);
 \$table_prefix  = 'wp_';
 define('WP_DEBUG', false);
 if ( !defined('ABSPATH') )
@@ -156,9 +158,9 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   # Clean-up directories
-  rm -Rf wordpress
-  rm -Rf secure-db-connection
+  rm -Rf wordpress;
+  rm -Rf secure-db-connection;
   # Clean-up zips
-  rm wordpress.zip
-  rm secure-db-connection.zip
+  rm wordpress.zip;
+  rm secure-db-connection.zip;
 fi
