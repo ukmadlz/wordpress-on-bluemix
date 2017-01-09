@@ -1,0 +1,15 @@
+---
+declared-services:
+  WordpressDatabase:
+    label: compose-for-mysql
+    plan: Standard
+applications:
+- name: wordpress-on-bluemix
+  path: .
+  instances: 1
+  disk_quota: 512M
+  memory: 256M
+  host: wordpress-${random-word}
+  random-route: true
+  services:
+  - WordpressDatabase
