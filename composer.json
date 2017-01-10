@@ -19,11 +19,11 @@
             "package": {
                 "name": "wordpress/wordpress",
                 "type": "webroot",
-                "version": "4.6.1",
+                "version": "4.7",
                 "source": {
                     "type": "git",
                     "url": "https://github.com/WordPress/WordPress.git",
-                    "reference": "4.6.1"
+                    "reference": "4.7"
                 },
                 "require": {
                     "fancyguy/webroot-installer": "1.0.0"
@@ -37,7 +37,7 @@
     },
     "require": {
         "php": "5.5.*",
-        "wordpress/wordpress": "4.6.*",
+        "wordpress/wordpress": "4.7.*",
         "wpackagist-plugin/captcha":">=3.9",
         "wpackagist-theme/hueman":"*",
         "wpackagist-plugin/secure-db-connection": "*"
