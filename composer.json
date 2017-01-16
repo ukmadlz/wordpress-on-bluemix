@@ -1,0 +1,49 @@
+{
+    "name": "ukmadlz/wordpress-on-bluemix",
+    "description": "Install Wordpress on IBM Bluemix with Compose for MySQL",
+    "type": "project",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Mike Elsmore",
+            "email": "mike.elsmore@uk.ibm.com"
+        }
+    ],
+    "repositories":[
+        {
+            "type":"composer",
+            "url":"https://wpackagist.org"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "wordpress/wordpress",
+                "type": "webroot",
+                "version": "4.7",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/WordPress/WordPress.git",
+                    "reference": "4.7"
+                },
+                "require": {
+                    "fancyguy/webroot-installer": "1.0.0"
+                }
+            }
+        }
+    ],
+    "scripts": {
+        "post-install-cmd": "php .bp-config/setup-wordpress.php",
+        "post-update-cmd": "php .bp-config/setup-wordpress.php"
+    },
+    "require": {
+        "php": "5.5.*",
+        "wordpress/wordpress": "4.7.*",
+        "wpackagist-plugin/captcha":">=3.9",
+        "wpackagist-theme/hueman":"*",
+        "wpackagist-plugin/secure-db-connection": "*"
+    },
+    "extra": {
+        "webroot-dir": "content",
+        "webroot-package": "wordpress/wordpress"
+    }
+}

@@ -1,0 +1,4 @@
+{
+    "WEBDIR": "content",
+    "PHP_EXTENSIONS": ["mysqli", "curl", "zlib", "openssl", "mcrypt", "mbstring"]
+}

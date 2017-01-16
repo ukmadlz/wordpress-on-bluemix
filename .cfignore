@@ -1,4 +1,7 @@
 .DS_Store
+deploy.sh
+README.md
+LICENSE
 /vendor/
 /content/
 /wp-content/
