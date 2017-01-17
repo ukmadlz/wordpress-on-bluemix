@@ -19,11 +19,11 @@
             "package": {
                 "name": "wordpress/wordpress",
                 "type": "webroot",
-                "version": "4.7",
+                "version": "4.7.1",
                 "source": {
                     "type": "git",
                     "url": "https://github.com/WordPress/WordPress.git",
-                    "reference": "4.7"
+                    "reference": "4.7.1"
                 },
                 "require": {
                     "fancyguy/webroot-installer": "1.0.0"
