@@ -21,7 +21,7 @@ The available API URLs currently are `https://api.ng.bluemix.net` (US), `https:/
 Once that's done we can actually deploy the app. First you will need to grab your own copy.
 
 ```
-git clone git@github.com:ukmadlz/wordpress-on-bluemix.git
+git clone git@github.com:ibm-cds-labs/wordpress-on-bluemix.git
 cd ghost-on-bluemix
 ```
 
